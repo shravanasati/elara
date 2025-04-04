@@ -1,10 +1,14 @@
 from jinja2 import FileSystemLoader, Environment, select_autoescape
 from dataclasses import dataclass
 
+from elara.models import Notebook
+
+
 @dataclass(frozen=True)
 class RenderOptions:
     filename: str
-    cells: 
+    notebook: Notebook
+    # todo styles
 
 
 class TemplateRenderer:
@@ -17,7 +21,5 @@ class TemplateRenderer:
 
         self.__template = self.__env.get_template("export.html")
 
-    def render(self, options: RenderOptions)
+    def render(self, options: RenderOptions):
         return self.__template.render(**options.as_dict())
-
-

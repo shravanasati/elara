@@ -73,5 +73,7 @@ class Notebook:
 
 
 if __name__ == "__main__":
-    params = {"metadata": "hi", "lmao": "ded"}
-    nb = Notebook(**params)
+    import json
+    with open("./sample.ipynb") as f:
+        nb = Notebook(**json.load(f))
+        print(nb)
