@@ -1,74 +1,82 @@
-from dataclasses import dataclass
-from typing import Any
+from pydantic import BaseModel, Field
+from typing import Union, Literal, List, Optional, Annotated, Any, Dict
 
-frozenSlottedKwOnlyDataclass = dataclass(frozen=True, slots=True, kw_only=True)
 
 CellID = str
-Metadata = dict[str, Any]
-Source = str | list[str]
-MimeBundle = dict[str, str]
+Metadata = Dict[str, Any]
+Source = Union[str, List[str]]
+MimeBundle = Dict[str, str]
 
 
-@frozenSlottedKwOnlyDataclass
-class ExecuteResult:
-    output_type: str = "execute_result"
+class ExecuteResult(BaseModel):
+    output_type: Literal["execute_result"] = "execute_result"
     data: MimeBundle
     metadata: Metadata
-    execution_count: int | None
+    execution_count: Optional[int]
 
 
-@frozenSlottedKwOnlyDataclass
-class DisplayData:
-    output_type: str = "display_data"
+class DisplayData(BaseModel):
+    output_type: Literal["display_data"] = "display_data"
     data: MimeBundle
     metadata: Metadata
 
 
-@frozenSlottedKwOnlyDataclass
-class Stream:
-    output_type: str = "stream"
+class Stream(BaseModel):
+    output_type: Literal["stream"] = "stream"
     name: str
     text: Source
 
+    def get_source(self) -> str:
+        if isinstance(self.text, str):
+            return self.text
+        elif isinstance(self.text, list):
+            return "".join(self.text)
+        raise ValueError(f"Invalid text: {self.text!r}")
 
-@frozenSlottedKwOnlyDataclass
-class Error:
-    output_type: str = "error"
+
+class Error(BaseModel):
+    output_type: Literal["error"] = "error"
     ename: str
     evalue: str
-    traceback: list[str]
+    traceback: List[str]
 
 
-Output = ExecuteResult | DisplayData | Stream | Error
+Output = Annotated[
+    Union[ExecuteResult, DisplayData, Stream, Error], Field(discriminator="output_type")
+]
 
 
-@frozenSlottedKwOnlyDataclass
-class MarkdownCell:
-    id: CellID
-    cell_type: str = "markdown"
+class CellBase(BaseModel):
+    id: Optional[CellID] = None
     metadata: Metadata
     source: Source
 
-
-@frozenSlottedKwOnlyDataclass
-class CodeCell:
-    id: CellID
-    cell_type: str = "code"
-    metadata: Metadata
-    source: Source
-    outputs: list[Output]
-    execution_count: int | None
+    def get_source(self) -> str:
+        if isinstance(self.source, str):
+            return self.source
+        elif isinstance(self.source, list):
+            return "".join(self.source)
+        raise ValueError(f"Invalid source: {self.source!r}")
 
 
-Cell = MarkdownCell | CodeCell
+class MarkdownCell(CellBase):
+    cell_type: Literal["markdown"] = "markdown"
 
 
-@frozenSlottedKwOnlyDataclass
-class Notebook:
+class CodeCell(CellBase):
+    cell_type: Literal["code"] = "code"
+    outputs: List[Output]
+    execution_count: Optional[int]
+
+
+Cell = Annotated[Union[MarkdownCell, CodeCell], Field(discriminator="cell_type")]
+
+
+class Notebook(BaseModel):
     metadata: Metadata
     nbformat_minor: int
     nbformat: int
-    cells: list[Cell]
+    cells: List[Cell]
 
 
 if __name__ == "__main__":

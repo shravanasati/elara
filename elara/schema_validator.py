@@ -1,9 +1,8 @@
 import importlib
 import json
-import logging
 from typing import Any
 
-from jsonschema import Draft4Validator, ValidationError, validate
+from jsonschema import Draft4Validator, validate
 
 
 def get_notebook_schema() -> dict[str, Any]:
@@ -17,12 +16,7 @@ notebook_schema = get_notebook_schema()
 
 
 def validate_notebook(notebook_json: dict[str, Any]) -> bool:
-    try:
-        validate(notebook_json, notebook_schema, cls=Draft4Validator)
-        return True
-    except ValidationError as ve:
-        logging.error(ve)
-        return False
+    validate(notebook_json, notebook_schema, cls=Draft4Validator)
 
 
 if __name__ == "__main__":

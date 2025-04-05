@@ -1,13 +1,19 @@
+from dataclasses import asdict, dataclass
+from datetime import date
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from elara.models import Notebook, frozenSlottedKwOnlyDataclass
+from elara.models import Notebook
 
 
-@frozenSlottedKwOnlyDataclass
+@dataclass(frozen=True, slots=True)
 class RenderOptions:
     filename: str
     notebook: Notebook
+    date_: date = date.today()
     # todo styles
+
+    def as_dict(self):
+        return asdict(self)
 
 
 class TemplateRenderer:
@@ -21,4 +27,6 @@ class TemplateRenderer:
         self.__template = self.__env.get_template("export.html")
 
     def render(self, options: RenderOptions):
-        return self.__template.render(**options.as_dict())
+        return self.__template.render(
+            filename=options.filename, date_=options.date_, notebook=options.notebook
+        )

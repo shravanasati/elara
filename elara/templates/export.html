@@ -1,15 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>{{title}}</title>
+	<title>{{filename}}</title>
 </head>
+
 <body>
-	<!-- todo filename -->
-	<!-- todo date -->
-	<!-- todo markdown -->
-	<!-- todo images -->
-	<!-- todo code -->
+	<h1>{{filename}}</h1>
+	<h2>{{date_.strftime('%B %d, %Y')}}</h2>
+
+	{% for cell in notebook.cells %}
+	{% if cell.cell_type == "markdown" %}
+	<div class="markdown">
+		{{cell.get_source()}}
+	</div>
+	{% endif %}
+	{% if cell.cell_type == "code" %}
+	<pre><code class="code">{{cell.get_source()}}</code></pre>
+	<div class="output">
+		<h3>Output:</h3>
+		{% for output in cell.outputs %}
+		{% if output.output_type == "stream" %}
+			<pre>{{output.get_source()}}</pre>
+		{% endif %}
+		{% endfor %}
+	</div>
+	{% endif %}
+	{% endfor %}
 </body>
+
 </html>
