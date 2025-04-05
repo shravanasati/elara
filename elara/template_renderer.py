@@ -1,6 +1,8 @@
 from dataclasses import asdict, dataclass
 from datetime import date
+from functools import partial
 import re
+from ansi2html import Ansi2HTMLConverter
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markdown_it import MarkdownIt
 
@@ -55,6 +57,8 @@ class TemplateRenderer:
         self.__env.filters["get_source"] = get_source
         self._md_it = MarkdownIt()
         self.__env.filters["md2html"] = self._md_it.render
+        self._ansi2html = Ansi2HTMLConverter(dark_bg=False)
+        self.__env.filters["ansi2html"] = partial(self._ansi2html.convert, full=False)
         self.__env.tests["isjson"] = isjson
         self.__env.tests["isb64image"] = isb64image
 

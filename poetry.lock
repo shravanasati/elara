@@ -12,6 +12,21 @@ files = [
 ]
 
 [[package]]
+name = "ansi2html"
+version = "1.9.2"
+description = "Convert text with ANSI color codes to HTML or to LaTeX"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "ansi2html-1.9.2-py3-none-any.whl", hash = "sha256:dccb75aa95fb018e5d299be2b45f802952377abfdce0504c17a6ee6ef0a420c5"},
+    {file = "ansi2html-1.9.2.tar.gz", hash = "sha256:3453bf87535d37b827b05245faaa756dbab4ec3d69925e352b6319c3c955c0a5"},
+]
+
+[package.extras]
+docs = ["mkdocs", "mkdocs-material", "mkdocs-material-extensions", "mkdocstrings", "mkdocstrings-python", "pymdown-extensions"]
+test = ["pytest", "pytest-cov"]
+
+[[package]]
 name = "attrs"
 version = "25.3.0"
 description = "Classes Without Boilerplate"
@@ -571,4 +586,4 @@ typing-extensions = ">=4.12.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "f9947cc94c659b3461b7be8dd09d6fec9e97566dee838b7f7129f207dd96f5f6"
+content-hash = "6de93ce5fb80d5f3aa7532c35dadf79e1c8bdf8eadbb175412af77965aa9bfc8"

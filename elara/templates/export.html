@@ -141,8 +141,8 @@
           
           {% if output.output_type == "error" %}
             <div class="error">
-              <div class="error-name">{{output.ename}}: {{output.evalue}}</div>
-              <pre class="error-traceback">{{'\n'.join(output.traceback)}}</pre>
+              <div class="error-name">{{output.ename | ansi2html}}: {{output.evalue | ansi2html}}</div>
+              <pre class="error-traceback">{{'\n'.join(output.traceback) | ansi2html}}</pre>
             </div>
           {% endif %}
 
