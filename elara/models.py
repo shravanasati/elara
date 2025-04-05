@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Union, Literal, List, Optional, Annotated, Any, Dict
+import markdown
 
 
 CellID = str
@@ -61,6 +62,9 @@ class CellBase(BaseModel):
 
 class MarkdownCell(CellBase):
     cell_type: Literal["markdown"] = "markdown"
+
+    def get_source(self) -> str:
+        return markdown.markdown(super().get_source())
 
 
 class CodeCell(CellBase):

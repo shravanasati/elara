@@ -14,9 +14,8 @@
 	
 	
 	<div class="markdown">
-		## Practical 6
-
-Aim: Implementation and Time Analysis of Dijikstra&#39;s algorithm.
+		<h2>Practical 6</h2>
+<p>Aim: Implementation and Time Analysis of Dijikstra's algorithm.</p>
 	</div>
 	
 	
@@ -26,17 +25,17 @@ Aim: Implementation and Time Analysis of Dijikstra&#39;s algorithm.
 	<pre><code class="code">import heapq
 
 def dijikstra(graph, start):
-	distances = {node: float(&#34;inf&#34;) for node in graph}
+	distances = {node: float("inf") for node in graph}
 	distances[start] = 0
 	priority_queue = [(0, start)]
 	prev_nodes = {node: None for node in graph}
 	while priority_queue:
 		current_dist, current_node = heapq.heappop(priority_queue)
-		if current_dist &gt; distances[current_node]:
+		if current_dist > distances[current_node]:
 			continue
 		for neighbor, weight in graph[current_node]:
 			distance = current_dist + weight
-			if distance &lt; distances[neighbor]:
+			if distance < distances[neighbor]:
 				distances[neighbor] = distance
 				prev_nodes[neighbor] = current_node
 				heapq.heappush(priority_queue, (distance, neighbor))
@@ -44,22 +43,22 @@ def dijikstra(graph, start):
 	return distances, prev_nodes
 
 graph = {
-	&#39;A&#39;: [(&#39;B&#39;, 1), (&#39;C&#39;, 4)],
-	&#39;B&#39;: [(&#39;A&#39;, 1), (&#39;C&#39;, 2), (&#39;D&#39;, 5)],
-	&#39;C&#39;: [(&#39;A&#39;, 4), (&#39;B&#39;, 2), (&#39;D&#39;, 1)],
-	&#39;D&#39;: [(&#39;B&#39;, 5), (&#39;C&#39;, 1)],
+	'A': [('B', 1), ('C', 4)],
+	'B': [('A', 1), ('C', 2), ('D', 5)],
+	'C': [('A', 4), ('B', 2), ('D', 1)],
+	'D': [('B', 5), ('C', 1)],
 }
 
-distances, prev_nodes = dijikstra(graph, &#39;A&#39;)
-print(f&#34;Shortest {distances=}&#34;)
-print(f&#34;Previous node= {prev_nodes}&#34;)
+distances, prev_nodes = dijikstra(graph, 'A')
+print(f"Shortest {distances=}")
+print(f"Previous node= {prev_nodes}")
 </code></pre>
 	<div class="output">
 		<h3>Output:</h3>
 		
 		
-			<pre>Shortest distances={&#39;A&#39;: 0, &#39;B&#39;: 1, &#39;C&#39;: 3, &#39;D&#39;: 4}
-Previous node= {&#39;A&#39;: None, &#39;B&#39;: &#39;A&#39;, &#39;C&#39;: &#39;B&#39;, &#39;D&#39;: &#39;C&#39;}
+			<pre>Shortest distances={'A': 0, 'B': 1, 'C': 3, 'D': 4}
+Previous node= {'A': None, 'B': 'A', 'C': 'B', 'D': 'C'}
 </pre>
 		
 		
@@ -68,11 +67,9 @@ Previous node= {&#39;A&#39;: None, &#39;B&#39;: &#39;A&#39;, &#39;C&#39;: &#39;B
 	
 	
 	<div class="markdown">
-		### Complexity Analysis
-
-Time: O((V + E) logV)
-
-Space: O(V + E)
+		<h3>Complexity Analysis</h3>
+<p>Time: O((V + E) logV)</p>
+<p>Space: O(V + E)</p>
 	</div>
 	
 	
@@ -88,25 +85,25 @@ Space: O(V + E)
         self.edges.append([u, v, w])
 
     def bellman_ford(self, src):
-        dist = [float(&#34;inf&#34;)] * self.V
+        dist = [float("inf")] * self.V
         dist[src] = 0
 
         for _ in range(self.V - 1):
             for u, v, w in self.edges:
-                if dist[u] != float(&#34;inf&#34;) and dist[u] + w &lt; dist[v]:
+                if dist[u] != float("inf") and dist[u] + w < dist[v]:
                     dist[v] = dist[u] + w
 
         for u, v, w in self.edges:
-            if dist[u] != float(&#34;Inf&#34;) and dist[u] + w &lt; dist[v]:
-                print(&#34;Graph contains negative weight cycle&#34;)
+            if dist[u] != float("Inf") and dist[u] + w < dist[v]:
+                print("Graph contains negative weight cycle")
                 return
 
         self.print_solution(dist)
 
     def print_solution(self, dist):
-        print(&#34;Vertex Distance from Source&#34;)
+        print("Vertex Distance from Source")
         for i in range(self.V):
-            print(f&#34;{i}\t\t{dist[i]}&#34;)
+            print(f"{i}\t\t{dist[i]}")
 
 
 g = Graph(5)
@@ -138,11 +135,9 @@ g.bellman_ford(0)</code></pre>
 	
 	
 	<div class="markdown">
-		### Complexity Analysis
-
-Time: O(V x E)
-
-Space: O(V + E)
+		<h3>Complexity Analysis</h3>
+<p>Time: O(V x E)</p>
+<p>Space: O(V + E)</p>
 	</div>
 	
 	

@@ -21,7 +21,8 @@ class TemplateRenderer:
         self.__env = Environment(
             loader=FileSystemLoader("templates"),
             auto_reload=False,
-            autoescape=select_autoescape(),
+            autoescape=False
+            # autoescape=select_autoescape(),
         )
 
         self.__template = self.__env.get_template("export.html")
