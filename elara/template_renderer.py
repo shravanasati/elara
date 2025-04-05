@@ -1,10 +1,9 @@
-from jinja2 import FileSystemLoader, Environment, select_autoescape
-from dataclasses import dataclass
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from elara.models import Notebook
+from elara.models import Notebook, frozenSlottedKwOnlyDataclass
 
 
-@dataclass(frozen=True)
+@frozenSlottedKwOnlyDataclass
 class RenderOptions:
     filename: str
     notebook: Notebook

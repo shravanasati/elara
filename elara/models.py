@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
 
-
 frozenSlottedKwOnlyDataclass = dataclass(frozen=True, slots=True, kw_only=True)
 
 CellID = str
@@ -74,6 +73,7 @@ class Notebook:
 
 if __name__ == "__main__":
     import json
+
     with open("./sample.ipynb") as f:
         nb = Notebook(**json.load(f))
         print(nb)
