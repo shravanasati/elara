@@ -5,29 +5,172 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{{filename}}</title>
+	<style>
+		body {
+			font-family: "Computer Modern Serif", "Times New Roman", Times, serif;
+			max-width: 800px;
+			margin: 0 auto;
+			padding: 20px;
+			line-height: 1.5;
+			color: #222;
+			background-color: #fffff8;
+		}
+
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			font-weight: normal;
+			margin-top: 1.5em;
+			margin-bottom: 0.5em;
+		}
+
+		h1 {
+			font-size: 2.2em;
+		}
+
+		h2 {
+			font-size: 1.8em;
+		}
+
+		.markdown {
+			margin: 1.5em 0;
+			text-align: justify;
+		}
+
+		.code {
+			font-family: "Computer Modern Typewriter", monospace;
+			background: #f9f9f9;
+			border-radius: 0;
+			margin: 1em 0;
+			border-left: 3px solid #ddd;
+			overflow-x: auto;
+		}
+
+		code {
+			font-family: "Computer Modern Typewriter", monospace;
+		}
+
+		.output {
+			margin: 1em 0 2em;
+			padding-left: 1.5em;
+			border-left: 1px solid #ddd;
+		}
+
+		.output-header {
+			color: #666;
+			font-size: 0.9em;
+			margin-bottom: 0.5em;
+			font-style: italic;
+		}
+
+		.output pre {
+			margin: 0.5em 0;
+			white-space: pre-wrap;
+			font-family: "Computer Modern Typewriter", monospace;
+		}
+
+		.error {
+			background: #fff5f5;
+			padding: 1em;
+			border-left: 3px solid #b71c1c;
+		}
+
+		.error-name {
+			color: #b71c1c;
+			font-weight: bold;
+		}
+
+		.error-message {
+			margin: 0.5em 0;
+		}
+
+		.error-traceback {
+			font-family: "Computer Modern Typewriter", monospace;
+			white-space: pre-wrap;
+		}
+
+		img {
+			max-width: 100%;
+			height: auto;
+			display: block;
+			margin: 1em auto;
+		}
+
+		.json-data {
+			background: #f9f9f9;
+			padding: 1em;
+			font-family: "Computer Modern Typewriter", monospace;
+			border-left: 1px solid #ddd;
+		}
+
+		pre {
+			margin: 0;
+		}
+
+		.text-center {
+			text-align: center;
+		}
+	</style>
 </head>
 
 <body>
-	<h1>{{filename}}</h1>
-	<h2>{{date_.strftime('%B %d, %Y')}}</h2>
+	<h1 class="text-center">{{filename}}</h1>
+	<h2 class="text-center">{{date_.strftime('%B %d, %Y')}}</h2>
 
 	{% for cell in notebook.cells %}
-	{% if cell.cell_type == "markdown" %}
-	<div class="markdown">
-		{{cell.get_source()}}
-	</div>
-	{% endif %}
-	{% if cell.cell_type == "code" %}
-	<pre><code class="code">{{cell.get_source()}}</code></pre>
-	<div class="output">
-		<h3>Output:</h3>
-		{% for output in cell.outputs %}
-		{% if output.output_type == "stream" %}
-			<pre>{{output.get_source()}}</pre>
-		{% endif %}
-		{% endfor %}
-	</div>
-	{% endif %}
+
+    {% if cell.cell_type == "markdown" %}
+      <div class="markdown">
+        {{cell.source | get_source | md2html | safe}}
+      </div>
+    {% endif %}
+
+    {% if cell.cell_type == "code" %}
+      <div class="code">
+        <pre><code>{{cell.source | get_source }}</code></pre>
+      </div>
+
+      <div class="output">
+        {% for output in cell.outputs %}
+          {% if output.output_type == "stream" %}
+            <pre>{{output | get_source }}</pre>
+          {% endif %}
+          
+          {% if output.output_type == "error" %}
+            <div class="error">
+              <div class="error-name">{{output.ename}}: {{output.evalue}}</div>
+              <pre class="error-traceback">{{'\n'.join(output.traceback)}}</pre>
+            </div>
+          {% endif %}
+
+          {% if output.output_type in ('display_data', 'execute_result') %}
+            {% if output.output_type == "execute_result" %}
+              <div class="output-header">Out [{{output.execution_count}}]: </div>
+            {% endif %}
+
+            {% for mimetype, data in output.data.items() %}
+              {% if mimetype == "text/plain" %}
+                {{data | get_source}}
+              {% endif %}
+              {% if mimetype == "text/markdown" %}
+                {{data | get_source | md2html }}
+              {% endif %}
+              {% if mimetype == "image/png" %}
+                <img src="data:image/png;base64, {{data | get_source}}" alt="display_data result">
+              {% endif %}
+              {% if mimetype is isjson %}
+                {{data | get_source | tojson(indent=2)}}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </div>
+
+    {% endif %}
+
 	{% endfor %}
 </body>
 

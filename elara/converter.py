@@ -43,6 +43,6 @@ class Converter:
 if __name__ == "__main__":
     c = Converter()
     with open("test.html", "w") as f:
-        output = c.convert("./samples/mine.ipynb")
+        output = c.convert("./samples/colab.ipynb")
         if output is not None:
             f.write(output)

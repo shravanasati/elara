@@ -1,12 +1,11 @@
 from pydantic import BaseModel, Field
-from typing import Union, Literal, List, Optional, Annotated, Any, Dict
-import markdown
+from typing import Union, Literal, Optional, Annotated, Any
 
 
 CellID = str
-Metadata = Dict[str, Any]
-Source = Union[str, List[str]]
-MimeBundle = Dict[str, str]
+Metadata = dict[str, Any]
+Source = Union[str, list[str]]
+MimeBundle = dict[str, str | list[str]]
 
 
 class ExecuteResult(BaseModel):
@@ -27,19 +26,12 @@ class Stream(BaseModel):
     name: str
     text: Source
 
-    def get_source(self) -> str:
-        if isinstance(self.text, str):
-            return self.text
-        elif isinstance(self.text, list):
-            return "".join(self.text)
-        raise ValueError(f"Invalid text: {self.text!r}")
-
 
 class Error(BaseModel):
     output_type: Literal["error"] = "error"
     ename: str
     evalue: str
-    traceback: List[str]
+    traceback: list[str]
 
 
 Output = Annotated[
@@ -52,24 +44,14 @@ class CellBase(BaseModel):
     metadata: Metadata
     source: Source
 
-    def get_source(self) -> str:
-        if isinstance(self.source, str):
-            return self.source
-        elif isinstance(self.source, list):
-            return "".join(self.source)
-        raise ValueError(f"Invalid source: {self.source!r}")
-
 
 class MarkdownCell(CellBase):
     cell_type: Literal["markdown"] = "markdown"
 
-    def get_source(self) -> str:
-        return markdown.markdown(super().get_source())
-
 
 class CodeCell(CellBase):
     cell_type: Literal["code"] = "code"
-    outputs: List[Output]
+    outputs: list[Output]
     execution_count: Optional[int]
 
 
@@ -80,7 +62,7 @@ class Notebook(BaseModel):
     metadata: Metadata
     nbformat_minor: int
     nbformat: int
-    cells: List[Cell]
+    cells: list[Cell]
 
 
 if __name__ == "__main__":
