@@ -1,5 +1,6 @@
 from dataclasses import asdict, dataclass
 from datetime import date
+import re
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markdown_it import MarkdownIt
 
@@ -35,6 +36,13 @@ def isjson(mimetype: str) -> bool:
     return mimetype == "application/json" or mimetype.endswith("+json")
 
 
+def isb64image(mimetype: str) -> bool:
+    """
+    Jinja test to check if a mimetype is an base64-encoded image.
+    """
+    return bool(re.fullmatch(r"image/(png|jpeg|jpg)", mimetype))
+
+
 class TemplateRenderer:
     def __init__(self):
         self.__env = Environment(
@@ -48,6 +56,7 @@ class TemplateRenderer:
         self._md_it = MarkdownIt()
         self.__env.filters["md2html"] = self._md_it.render
         self.__env.tests["isjson"] = isjson
+        self.__env.tests["isb64image"] = isb64image
 
         self.__template = self.__env.get_template("export.html")
 

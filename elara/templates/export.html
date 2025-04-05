@@ -136,7 +136,7 @@
       <div class="output">
         {% for output in cell.outputs %}
           {% if output.output_type == "stream" %}
-            <pre>{{output | get_source }}</pre>
+            <pre>{{output.text | get_source }}</pre>
           {% endif %}
           
           {% if output.output_type == "error" %}
@@ -156,10 +156,16 @@
                 {{data | get_source}}
               {% endif %}
               {% if mimetype == "text/markdown" %}
-                {{data | get_source | md2html }}
+                {{data | get_source | md2html | safe }}
               {% endif %}
-              {% if mimetype == "image/png" %}
-                <img src="data:image/png;base64, {{data | get_source}}" alt="display_data result">
+              {% if mimetype == "text/html" %}
+                {{data | get_source | safe }}
+              {% endif %}
+              {% if mimetype is isb64image %}
+                <img src="data:{{mimetype}};base64, {{data | get_source}}" alt="display_data result">
+              {% endif %}
+              {% if mimetype == "image/svg+xml" %}
+                {{data | get_source | safe}}
               {% endif %}
               {% if mimetype is isjson %}
                 {{data | get_source | tojson(indent=2)}}

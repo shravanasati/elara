@@ -5,7 +5,7 @@ from typing import Union, Literal, Optional, Annotated, Any
 CellID = str
 Metadata = dict[str, Any]
 Source = Union[str, list[str]]
-MimeBundle = dict[str, str | list[str]]
+MimeBundle = dict[str, str | list[str] | dict[str, Any]]
 
 
 class ExecuteResult(BaseModel):
