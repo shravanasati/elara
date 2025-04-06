@@ -3,9 +3,10 @@ import logging
 
 from jsonschema import ValidationError
 from elara.fileutils import FileLike, get_filename, open_file
-from elara.models import Notebook
+from elara.notebook import Notebook
 from elara.schema_validator import validate_notebook
 from elara.template_renderer import RenderOptions, TemplateRenderer
+from elara.themes import extract_theme_data
 
 
 class Converter:
@@ -15,8 +16,11 @@ class Converter:
     to the suitable style.
     """
 
-    def __init__(self):
-        self.renderer = TemplateRenderer()
+    def __init__(self, theme_path: str):
+        with open_file(theme_path) as f:
+            theme_json = json.load(f)
+
+        self.renderer = TemplateRenderer(extract_theme_data(theme_json))
 
     def convert(self, file: FileLike):
         try:
@@ -41,9 +45,9 @@ class Converter:
 
 
 if __name__ == "__main__":
-    c = Converter()
+    c = Converter("./themes/vin-theme.json")
     with open("test.html", "w") as f:
-        # output = c.convert("./samples/mine.ipynb")
-        output = c.convert("/home/shravan/Downloads/model_training.ipynb")
+        output = c.convert("./samples/mine.ipynb")
+        # output = c.convert("/home/shravan/Downloads/model_training.ipynb")
         if output is not None:
             f.write(output)

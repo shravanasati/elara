@@ -8,7 +8,9 @@ from ansi2html import Ansi2HTMLConverter
 from jinja2 import Environment, FileSystemLoader  # , select_autoescape
 from markdown_it import MarkdownIt
 
-from elara.models import Notebook
+from elara.notebook import Notebook
+from elara.highlighter import SyntaxHighlighter
+from elara.themes import Theme
 
 
 @dataclass(frozen=True, slots=True)
@@ -50,7 +52,7 @@ def isb64image(mimetype: str) -> bool:
 
 
 class TemplateRenderer:
-    def __init__(self):
+    def __init__(self, theme: Theme):
         self.__env = Environment(
             loader=FileSystemLoader("templates"),
             auto_reload=False,
@@ -59,10 +61,16 @@ class TemplateRenderer:
         )
         # configure custom filters and tests
         self.__env.filters["get_source"] = get_source
+
         self._md_it = MarkdownIt()
         self.__env.filters["md2html"] = self._md_it.render
+
         self._ansi2html = Ansi2HTMLConverter(dark_bg=False)
         self.__env.filters["ansi2html"] = partial(self._ansi2html.convert, full=False)
+
+        self._syntax_highlighter = SyntaxHighlighter(theme)
+        self.__env.filters["highlight"] = self._syntax_highlighter.highlight
+
         self.__env.tests["isjson"] = isjson
         self.__env.tests["isb64image"] = isb64image
 
@@ -70,5 +78,6 @@ class TemplateRenderer:
 
     def render(self, options: RenderOptions):
         return self.__template.render(
-            filename=options.filename, date_=options.date_, notebook=options.notebook
+            filename=options.filename, date_=options.date_, notebook=options.notebook,
+            styles=self._syntax_highlighter.styles()
         )

@@ -114,6 +114,8 @@
 		.text-center {
 			text-align: center;
 		}
+
+		{{styles}}
 	</style>
 </head>
 
@@ -131,7 +133,7 @@
 
     {% if cell.cell_type == "code" %}
       <div class="code">
-        <pre><code>{{cell.source | get_source }}</code></pre>
+        <pre><code>{{cell.source | get_source | highlight }}</code></pre>
       </div>
 
       <div class="output">
