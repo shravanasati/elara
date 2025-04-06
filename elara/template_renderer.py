@@ -1,9 +1,11 @@
 from dataclasses import asdict, dataclass
 from datetime import date
 from functools import partial
+import json
 import re
+from typing import Any
 from ansi2html import Ansi2HTMLConverter
-from jinja2 import Environment, FileSystemLoader, select_autoescape
+from jinja2 import Environment, FileSystemLoader  # , select_autoescape
 from markdown_it import MarkdownIt
 
 from elara.models import Notebook
@@ -20,7 +22,7 @@ class RenderOptions:
         return asdict(self)
 
 
-def get_source(s: str | list[str]) -> str:
+def get_source(s: str | list[str] | dict[Any, Any]) -> str:
     """
     Jinja filter to render model `Source`.
     """
@@ -28,6 +30,8 @@ def get_source(s: str | list[str]) -> str:
         return s
     elif isinstance(s, list):
         return "".join(s)
+    elif isinstance(s, dict):
+        return json.dumps(s)
     raise ValueError(f"Invalid text: {s!r}")
 
 
