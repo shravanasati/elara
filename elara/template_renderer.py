@@ -20,7 +20,7 @@ class RenderOptions:
     filename: str
     notebook: Notebook
     date_: date = date.today()
-    # todo styles
+    # todo font
 
     def as_dict(self):
         return asdict(self)
