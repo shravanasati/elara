@@ -72,6 +72,8 @@ class TemplateRenderer:
         self._syntax_highlighter = SyntaxHighlighter(theme)
         self.__env.filters["highlight"] = self._syntax_highlighter.highlight
 
+        self._css_styles = self._syntax_highlighter.formatter.get_style_defs(".highlight")
+
         self.__env.tests["isjson"] = isjson
         self.__env.tests["isb64image"] = isb64image
 
@@ -83,4 +85,5 @@ class TemplateRenderer:
             date_=options.date_,
             notebook=options.notebook,
             theme=self.theme,
+            styles=self._css_styles,
         )

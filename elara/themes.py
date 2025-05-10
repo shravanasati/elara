@@ -1,4 +1,15 @@
 from pydantic import BaseModel
+from pygments.style import Style
+from pygments.token import (
+    Token,
+    Keyword,
+    Name,
+    Comment,
+    String,
+    Number,
+    Operator,
+    Punctuation,
+)
 from typing import Any, Optional, Dict
 
 
@@ -57,18 +68,33 @@ class Theme(BaseModel):
     @property
     def styles(self):
         """
-        The `styles` method should be called and its CSS output should be inserted in the
-        style tag.
+        Returns a custom styles object that can be passed to the pygments formatter.
         """
-        styles: list[str] = []
-        default_color = self.raw_colors.get("editor.foreground")
-        styles.append(f".token.default {{\n color: {default_color} \n}}")
-        for field_name in self.python_code.__class__.model_fields:
-            color = getattr(self.python_code, field_name)
-            styles.append(
-                f".token.{field_name} {{\n color: {color} \n}}"
-            )
-        return "\n".join(styles)
+        colors = self.python_code
+        default_color = self.raw_colors.get("editor.foreground", "#ffffff")
+
+        def color_or_default(c: str | None):
+            if c is None:
+                return default_color
+
+            return c
+
+        class CustomStyle(Style):
+            styles = {
+                Token: "",
+                Comment: color_or_default(colors.comment),
+                Keyword: color_or_default(colors.keyword),
+                String: color_or_default(colors.keyword),
+                Number: color_or_default(colors.number),
+                Name: default_color,
+                Name.Function: color_or_default(colors.function_definition),
+                Name.Class: color_or_default(colors.class_definition),
+                Name.Variable: color_or_default(colors.variable),
+                Operator: color_or_default(colors.operator),
+                Punctuation: color_or_default(colors.punctuation),
+            }
+        
+        return CustomStyle
 
 
 def extract_theme_data(theme_json: dict[str, Any]) -> Theme:

@@ -45,7 +45,7 @@ class Converter:
 
 
 if __name__ == "__main__":
-    c = Converter("./themes/vin-theme.json")
+    c = Converter("./themes/latte.json")
     with open("test.html", "w") as f:
         output = c.convert("./samples/mine.ipynb")
         # output = c.convert("/home/shravan/Downloads/model_training.ipynb")

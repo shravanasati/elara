@@ -15,6 +15,7 @@ typer = "^0.15.2"
 jsonschema = "^4.23.0"
 pydantic = "^2.11.2"
 ansi2html = "^1.9.2"
+pygments = "^2.19.1"
 
 
 [build-system]
