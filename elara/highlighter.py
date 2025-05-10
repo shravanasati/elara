@@ -14,17 +14,21 @@ class SyntaxHighlighter:
     def __init__(self, theme: Theme | str):
         if isinstance(theme, Theme):
             self.theme = theme
-            self.formatter = HtmlFormatter(cssclass="highlight", style=self.theme.styles)
+            self.formatter = HtmlFormatter(
+                cssclass="highlight", style=self.theme.styles
+            )
         elif isinstance(theme, str):
             try:
                 self.theme = theme
-                self.formatter = HtmlFormatter(cssclass="highlight", style=get_style_by_name(theme))
+                self.formatter = HtmlFormatter(
+                    cssclass="highlight", style=get_style_by_name(theme)
+                )
 
             except Exception:
                 # theme not found
                 print(f"Theme {theme} not found!")
                 exit(1)
-        
+
         else:
             print(f"Unknown {theme=} passed")
             exit(1)

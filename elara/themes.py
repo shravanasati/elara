@@ -1,16 +1,17 @@
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel
 from pygments.style import Style
 from pygments.token import (
-    Token,
+    Comment,
     Keyword,
     Name,
-    Comment,
-    String,
     Number,
     Operator,
     Punctuation,
+    String,
+    Token,
 )
-from typing import Any, Optional, Dict
 
 
 class ThemeColor(BaseModel):
@@ -93,7 +94,7 @@ class Theme(BaseModel):
                 Operator: color_or_default(colors.operator),
                 Punctuation: color_or_default(colors.punctuation),
             }
-        
+
         return CustomStyle
 
 

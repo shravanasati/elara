@@ -1,16 +1,17 @@
+import json
+import re
 from dataclasses import asdict, dataclass
 from datetime import date
 from functools import partial
-import json
-import re
 from typing import Any
+
 from ansi2html import Ansi2HTMLConverter
 from jinja2 import Environment, FileSystemLoader  # , select_autoescape
 from markdown_it import MarkdownIt
 from pygments.styles import get_style_by_name
 
-from elara.notebook import Notebook
 from elara.highlighter import SyntaxHighlighter
+from elara.notebook import Notebook
 from elara.themes import Theme
 
 
@@ -77,8 +78,9 @@ class TemplateRenderer:
         elif isinstance(self.theme, str):
             self.bg_color = get_style_by_name(self.theme).background_color
 
-
-        self._css_styles = self._syntax_highlighter.formatter.get_style_defs(".highlight")
+        self._css_styles = self._syntax_highlighter.formatter.get_style_defs(
+            ".highlight"
+        )
 
         self.__env.tests["isjson"] = isjson
         self.__env.tests["isb64image"] = isb64image

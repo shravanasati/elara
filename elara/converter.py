@@ -3,6 +3,7 @@ import logging
 
 from jsonschema import ValidationError
 from pygments.styles import get_all_styles
+
 from elara.fileutils import FileLike, get_filename, open_file
 from elara.notebook import Notebook
 from elara.schema_validator import validate_notebook

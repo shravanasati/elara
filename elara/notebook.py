@@ -1,6 +1,6 @@
-from pydantic import BaseModel, Field
-from typing import Union, Literal, Optional, Annotated, Any
+from typing import Annotated, Any, Literal, Optional, Union
 
+from pydantic import BaseModel, Field
 
 CellID = str
 Metadata = dict[str, Any]
