@@ -54,6 +54,22 @@ class Theme(BaseModel):
         None  # Optionally store the raw 'tokenColors' section
     )
 
+    @property
+    def styles(self):
+        """
+        The `styles` method should be called and its CSS output should be inserted in the
+        style tag.
+        """
+        styles: list[str] = []
+        default_color = self.raw_colors.get("editor.foreground")
+        styles.append(f".token.default {{\n color: {default_color} \n}}")
+        for field_name in self.python_code.__class__.model_fields:
+            color = getattr(self.python_code, field_name)
+            styles.append(
+                f".token.{field_name} {{\n color: {color} \n}}"
+            )
+        return "\n".join(styles)
+
 
 def extract_theme_data(theme_json: dict[str, Any]) -> Theme:
     theme_data = Theme(name=theme_json.get("name", "Unnamed Theme"))

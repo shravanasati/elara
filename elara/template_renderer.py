@@ -68,6 +68,7 @@ class TemplateRenderer:
         self._ansi2html = Ansi2HTMLConverter(dark_bg=False)
         self.__env.filters["ansi2html"] = partial(self._ansi2html.convert, full=False)
 
+        self.theme = theme
         self._syntax_highlighter = SyntaxHighlighter(theme)
         self.__env.filters["highlight"] = self._syntax_highlighter.highlight
 
@@ -78,6 +79,8 @@ class TemplateRenderer:
 
     def render(self, options: RenderOptions):
         return self.__template.render(
-            filename=options.filename, date_=options.date_, notebook=options.notebook,
-            styles=self._syntax_highlighter.styles()
+            filename=options.filename,
+            date_=options.date_,
+            notebook=options.notebook,
+            theme=self.theme,
         )
