@@ -7,6 +7,7 @@ from typing import Any
 from ansi2html import Ansi2HTMLConverter
 from jinja2 import Environment, FileSystemLoader  # , select_autoescape
 from markdown_it import MarkdownIt
+from pygments.styles import get_style_by_name
 
 from elara.notebook import Notebook
 from elara.highlighter import SyntaxHighlighter
@@ -52,7 +53,7 @@ def isb64image(mimetype: str) -> bool:
 
 
 class TemplateRenderer:
-    def __init__(self, theme: Theme):
+    def __init__(self, theme: Theme | str):
         self.__env = Environment(
             loader=FileSystemLoader("templates"),
             auto_reload=False,
@@ -71,6 +72,11 @@ class TemplateRenderer:
         self.theme = theme
         self._syntax_highlighter = SyntaxHighlighter(theme)
         self.__env.filters["highlight"] = self._syntax_highlighter.highlight
+        if isinstance(self.theme, Theme):
+            self.bg_color = self.theme.raw_colors.get("editor.background")
+        elif isinstance(self.theme, str):
+            self.bg_color = get_style_by_name(self.theme).background_color
+
 
         self._css_styles = self._syntax_highlighter.formatter.get_style_defs(".highlight")
 
@@ -84,6 +90,6 @@ class TemplateRenderer:
             filename=options.filename,
             date_=options.date_,
             notebook=options.notebook,
-            theme=self.theme,
+            bg_color=self.bg_color,
             styles=self._css_styles,
         )
