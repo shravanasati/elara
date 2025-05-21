@@ -18,7 +18,9 @@ class Converter:
     to the suitable style.
     """
 
-    def __init__(self, theme_path: str):
+    def __init__(self, theme_path: str, font: str, code_font: str):
+        self.font = font
+        self.code_font = code_font
         if theme_path in list(get_all_styles()):
             theme = theme_path
         else:
@@ -38,7 +40,12 @@ class Converter:
                 nb_json = json.load(f)
             validate_notebook(nb_json)
             nb = Notebook(**nb_json)
-            render_opts = RenderOptions(filename=get_filename(file), notebook=nb)
+            render_opts = RenderOptions(
+                filename=get_filename(file),
+                notebook=nb,
+                font=self.font,
+                code_font=self.code_font,
+            )
             return self.renderer.render(render_opts)
 
         except FileNotFoundError:
@@ -55,7 +62,7 @@ class Converter:
 
 
 if __name__ == "__main__":
-    c = Converter("nord")
+    c = Converter("nord", "gf:Oswald", "gf:Cascadia Mono")
     # c = Converter("./themes/latte.json")
     with open("test.html", "w") as f:
         output = c.convert("./samples/mine.ipynb")

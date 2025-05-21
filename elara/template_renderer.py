@@ -4,6 +4,7 @@ from dataclasses import asdict, dataclass
 from datetime import date
 from functools import partial
 from typing import Any
+from urllib.parse import quote_plus
 
 from ansi2html import Ansi2HTMLConverter
 from jinja2 import Environment, FileSystemLoader  # , select_autoescape
@@ -19,8 +20,9 @@ from elara.themes import Theme
 class RenderOptions:
     filename: str
     notebook: Notebook
+    font: str
+    code_font: str
     date_: date = date.today()
-    # todo font
 
     def as_dict(self):
         return asdict(self)
@@ -51,6 +53,25 @@ def isb64image(mimetype: str) -> bool:
     Jinja test to check if a mimetype is an base64-encoded image.
     """
     return bool(re.fullmatch(r"image/(png|jpeg|jpg)", mimetype))
+
+
+def is_google_font(font_name: str) -> bool:
+    """
+    Jinja test to check if the font name is a google font.
+    """
+    return font_name.startswith("gf:")
+
+
+def format_google_font(font_name: str) -> str:
+    """
+    Jinja filter to format a font name for a URL. Removes 'gf:' prefix and quotes it.
+    """
+    if not is_google_font(font_name):
+        raise ValueError(
+            f"non google-font {font_name=} passed to format_google_font filter"
+        )
+
+    return quote_plus(font_name[3:])
 
 
 class TemplateRenderer:
@@ -85,6 +106,9 @@ class TemplateRenderer:
         self.__env.tests["isjson"] = isjson
         self.__env.tests["isb64image"] = isb64image
 
+        self.__env.tests["is_google_font"] = is_google_font
+        self.__env.filters["format_google_font"] = format_google_font
+
         self.__template = self.__env.get_template("export.html")
 
     def render(self, options: RenderOptions):
@@ -94,4 +118,6 @@ class TemplateRenderer:
             notebook=options.notebook,
             bg_color=self.bg_color,
             styles=self._css_styles,
+            font=options.font,
+            code_font=options.code_font,
         )

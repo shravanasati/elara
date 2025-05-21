@@ -5,9 +5,23 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{{filename}}</title>
+	
+	{% if font is is_google_font or code_font is is_google_font %}
+		<link rel="preconnect" href="https://fonts.googleapis.com"> 
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	{% endif %}
+
+	{% if font is is_google_font %}
+		<link href="https://fonts.googleapis.com/css2?family={{ font | format_google_font }}&display=swap" rel="stylesheet">
+	{% endif %}
+
+	{% if code_font is is_google_font %}
+		<link href="https://fonts.googleapis.com/css2?family={{ code_font | format_google_font }}&display=swap" rel="stylesheet">
+	{% endif %}
+
 	<style>
 		body {
-			font-family: "Computer Modern Serif", "Times New Roman", Times, serif;
+			font-family: "{{font.replace('gf:', '')}}";
 			max-width: 800px;
 			margin: 0 auto;
 			padding: 20px;
@@ -41,13 +55,13 @@
 		}
 
 		.code {
-			font-family: "Computer Modern Typewriter", monospace;
-			background: {{bg_color}};
+			font-family: "{{code_font.replace('gf:', '')}}";
 			border-radius: 0;
 			margin: 1em 0;
 			/*border-left: 3px solid #ddd;*/
 			overflow-x: auto;
 			padding: 1em;
+			background: {{bg_color}};
 		}
 
 		.output {
@@ -66,7 +80,7 @@
 		.output pre {
 			margin: 0.5em 0;
 			white-space: pre-wrap;
-			font-family: "Computer Modern Typewriter", monospace;
+			font-family: "{{code_font.replace('gf:', '')}}";
 		}
 
 		.error {
@@ -85,7 +99,7 @@
 		}
 
 		.error-traceback {
-			font-family: "Computer Modern Typewriter", monospace;
+			font-family: "{{code_font.replace('gf:', '')}}";
 			white-space: pre-wrap;
 		}
 
@@ -99,7 +113,7 @@
 		.json-data {
 			background: #f9f9f9;
 			padding: 1em;
-			font-family: "Computer Modern Typewriter", monospace;
+			font-family: "{{code_font.replace('gf:', '')}}";
 			border-left: 1px solid #ddd;
 		}
 
