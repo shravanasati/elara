@@ -3,6 +3,7 @@ import re
 from dataclasses import asdict, dataclass
 from datetime import date
 from functools import partial
+from pathlib import Path
 from typing import Any
 from urllib.parse import quote_plus
 
@@ -76,8 +77,9 @@ def format_google_font(font_name: str) -> str:
 
 class TemplateRenderer:
     def __init__(self, theme: Theme | str):
+        templates_path = Path(__file__).parent / "templates"
         self.__env = Environment(
-            loader=FileSystemLoader("templates"),
+            loader=FileSystemLoader(str(templates_path)),
             auto_reload=False,
             autoescape=False,
             # autoescape=select_autoescape(),
@@ -112,6 +114,9 @@ class TemplateRenderer:
         self.__template = self.__env.get_template("export.html")
 
     def render(self, options: RenderOptions):
+        # todo make date optional
+        # todo if font and code_font are different, fetch them in a single request
+        # add family query param in the URL
         return self.__template.render(
             filename=options.filename,
             date_=options.date_,

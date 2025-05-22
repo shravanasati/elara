@@ -50,11 +50,11 @@ class Converter:
 
         except FileNotFoundError:
             logging.error(f"File `{file}` not found.")
-            exit(1)
+            # exit(1)
 
         except ValidationError as ve:
             logging.error(ve)
-            exit(1)
+            # exit(1)
 
         except TypeError as te:
             logging.error("notebook construction failed, this should never happen")
