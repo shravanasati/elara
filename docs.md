@@ -1,12 +1,12 @@
-# elara
+# `elara`
 
 elara is a CLI tool to convert Jupyter notebooks into *pretty* HTML documents.
 
-Named after one of Jupiter's moons, elara's motive is to render beautiful HTML markups, with support for a number of themes. It has multiple built-in themes, and supports VSCode themes out of the box. 
+elara is very much customizable while providing sane defaults.
 
-elara aims to support only nbformat v4 (you are most likely already using it).
+For more information, visit https://github.com/shravanasati/elara
 
-### **Usage**:
+**Usage**:
 
 ```console
 $ elara [OPTIONS] COMMAND [ARGS]...
@@ -60,20 +60,3 @@ $ elara convert [OPTIONS] FILES...
 * `--font TEXT`: Font for overall document.  [default: sans-serif]
 * `--code-font TEXT`: Font for code and output.  [default: monospace]
 * `--help`: Show this message and exit.
-
-**Examples**:
-
-* Using a built in theme with pre-installed fonts:
-	```console
-	elara convert ./file.ipynb --theme "nord" --font "Arial" --code-font "Consolas"
-	```
-
-* Using Google fonts
-	```console
-	elara convert ./file.ipynb --theme "gruvbox" --font "gf:Geist" --code-font "gf:Geist Mono"
-	```
-
-* Using a VSCode theme
-	```console
-	elara convert ./file.ipynb --theme path/to/theme.json 
-	```
