@@ -1,4 +1,4 @@
-# elara
+# elara 🌙
 
 elara is a CLI tool to convert Jupyter notebooks into *pretty* HTML documents.
 
