@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "elara"
+name = "elarapy"
 version = "0.1.0"
 description = ""
 authors = ["Shravan Asati <dev.shravan@protonmail.com>"]
@@ -7,6 +7,10 @@ readme = "README.md"
 
 [tool.poetry.scripts]
 elara = "elara.main:app"
+
+[[tool.poetry.packages]]
+include = "elara"
+from = "."
 
 [tool.poetry.dependencies]
 python = "^3.11"

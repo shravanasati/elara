@@ -6,6 +6,28 @@ Named after one of Jupiter's moons, elara's motive is to render beautiful HTML m
 
 elara aims to support only nbformat v4 (you are most likely already using it).
 
+
+### Installation
+
+elara is available on [PyPI](https://pypi.org/project/elarapy).
+
+**recommended way** to install (isolated dependencies):
+```
+pipx install elarapy
+```
+
+**using pip** on linux/mac:
+```
+pip3 install elarapy
+```
+
+**using pip** on windows:
+```
+pip install elarapy
+```
+
+
+
 ### **Usage**:
 
 ```console
