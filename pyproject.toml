@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "elarapy"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Shravan Asati <dev.shravan@protonmail.com>"]
 readme = "README.md"
