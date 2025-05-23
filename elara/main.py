@@ -33,6 +33,32 @@ def list_themes():
     print(list(get_all_styles()))
 
 
+def get_output_filename(file: str):
+    """
+    Returns a non-existent HTML output file name.
+    """
+    filename_wo_ext = "".join(file.split(".ipynb")[:-1])
+    output_filename = filename_wo_ext + ".html"
+    output_path = Path(output_filename)
+    count = 1
+    while output_path.exists():
+        output_filename = f"{filename_wo_ext}({count}).html"
+        count += 1
+        output_path = Path(output_filename)
+
+    return output_filename
+
+
+def handle_file_conversion(input_file: str, output_filepath: str, converter: Converter):
+    """
+    Actually converts the given notebook file using the passed converter object.
+    """
+    output = converter.convert(input_file)
+    if output is not None:
+        with open(output_filepath, "w") as f:
+            f.write(output)
+
+
 @app.command()
 def convert(
     files: list[str],
@@ -43,6 +69,9 @@ def convert(
     code_font: Annotated[
         str, typer.Option(help="Font for code and output.")
     ] = "monospace",
+    silent: Annotated[
+        bool, typer.Option(help="Silent output, print only the exported file names.")
+    ] = False,
 ):
     """
     Converts multiple jupyter notebooks into HTML documents. Any options passed, will be applied to all
@@ -55,24 +84,22 @@ def convert(
     bar_col = BarColumn(None)
     progress = Progress(spinner, text_col, bar_col)
     converter = Converter(theme, font, code_font)
-    with progress:
-        for file in progress.track(files):
-            filename_wo_ext = "".join(file.split(".ipynb")[:-1])
-            output_filename = filename_wo_ext + ".html"
-            output_path = Path(output_filename)
-            count = 1
-            while output_path.exists():
-                output_filename = f"{filename_wo_ext}({count}).html"
-                count += 1
-                output_path = Path(output_filename)
-
-            progress.print(
-                f"Exporting [cyan]{file}[/] to [green bold]{output_filename}[/]..."
-            )
-            output = converter.convert(file)
-            if output is not None:
-                with open(output_filename, "w") as f:
-                    f.write(output)
+    if silent:
+        # only prints the output filenames
+        # used by the vscode extension
+        for file in files:
+            output_filename = get_output_filename(file)
+            handle_file_conversion(file, output_filename, converter)
+            print(output_filename)
+    else:
+        # default look for CLI users
+        with progress:
+            for file in progress.track(files):
+                output_filename = get_output_filename(file)
+                progress.print(
+                    f"Exporting [cyan]{file}[/] to [green bold]{output_filename}[/]..."
+                )
+                handle_file_conversion(file, output_filename, converter)
 
 
 if __name__ == "__main__":
