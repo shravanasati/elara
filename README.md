@@ -1,5 +1,10 @@
 # elara 🌙
 
+<p align="center">
+	<img src="./elara.png" width=256 height=256 alt="elara logo">
+	<blockquote>Logo Credits: <a href="https://github.com/vedant-panchal" target="_blank">@vedant-panchal</a> </blockquote>
+</p>
+
 elara is a CLI tool to convert Jupyter notebooks into *pretty* HTML documents.
 
 Named after one of Jupiter's moons, elara's motive is to render beautiful HTML markups, with support for a number of themes. It has multiple built-in themes, and supports VSCode themes out of the box. 
@@ -27,6 +32,13 @@ pip install elarapy
 ```
 
 
+### Sample Outputs
+
+![demo1](assets/demo1.png)
+> `vs` theme, `Inter` font, `Cascadia Code` code font
+
+![demo2](assets/demo2.png)
+> `nord` theme, `Geist` font, `Geist Mono` code font
 
 ### **Usage**:
 
